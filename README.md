@@ -1,4 +1,4 @@
-# Alignment Substitution Analyzer (for nucleotide and aminoacid substitutions)
+# AlignSubs: Alignment Substitution Analyzer (for nucleotide and aminoacid substitutions)
 
 This project is a Python script that allows researchers to analyze multiple sequence alignments (MSA, as FASTA or Clustalw Files) and generate substitution statistics for nucleotide and protein sequences. This tool is particularly useful for researchers and bioinformaticians studying sequence variation and evolutionary relationships.
 
