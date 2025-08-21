@@ -27,6 +27,23 @@ Latest version on PyPI:
 
 [![PyPI version](https://badge.fury.io/py/AlignSubs.svg)](https://badge.fury.io/py/AlignSubs)
 
+### Features
+
+1. **Cross-Platform:** Supports Windows, Mac, and Linux. Compatible with HPC environments.
+
+2. **CSV Outputs:**
+ - **Directional List:** Each protein/nucleotide pair is analyzed, listing substitutions sorted by highest count first. Includes positions and optional hydropathy changes.
+ - **Substitution Summary:** Aggregates substitution counts across all pairs, sorted by total occurrences.
+
+3. **Property changes**
+ - Protein: Hydropathy changes can optionally be calculated and included in CSV outputs.
+ - Additional protein/nucleotide property analyses will be included in upcoming versions.
+   
+4. **Input Files:** Supports FASTA and Clustal alignment formats, also as text.
+
+5. **Review and Save:** Users choose the paths to save CSV outputs. Substitutions and counts are clearly organized.
+
+
 ### Requirements
 If you want to run the script natively on your local computer (Option 1), ensure you have Python 3.x installed on your system. 
 
