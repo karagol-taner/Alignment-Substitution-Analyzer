@@ -25,7 +25,7 @@ AlignSubs
 
 Latest version on PyPI:
 
-[![PyPI version](https://badge.fury.io/py/HGVStoFASTA.svg)](https://badge.fury.io/py/HGVStoFASTA)
+[![PyPI version](https://badge.fury.io/py/AlignSubs.svg)](https://badge.fury.io/py/AlignSubs)
 
 ### Requirements
 If you want to run the script natively on your local computer (Option 1), ensure you have Python 3.x installed on your system. 
