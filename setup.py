@@ -8,7 +8,7 @@ setup(
     description='AlignSubs: Alignment Substitution Analyzer (for nucleotide and aminoacid substitutions)',
     author="Taner Karagol",
     author_email='taner.karagol@gmail.com',
-    url='https://github.com/karagol-taner/HGVS-missense-variants-to-FASTA',
+    url='https://github.com/karagol-taner/Alignment-Substitution-Analyzer',
     keywords='Alignment, FASTA, Clustal, MSA',
     install_requires=[
           'biopython',
