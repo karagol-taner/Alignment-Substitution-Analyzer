@@ -182,7 +182,8 @@ def save_substitution_summary_csv(names, all_changes, hydro_changes=None):
     print(f"Substitution summary CSV saved to {out_file}")
     time.sleep(0.5)
 
-if __name__ == "__main__":
+# ----------------- Main Run Function -----------------
+def run():
     print("Alignment Substitution Analyzer v0.2")
     time.sleep(1)
 

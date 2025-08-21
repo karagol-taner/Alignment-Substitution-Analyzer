@@ -1,7 +1,7 @@
-from . import HGVStoFASTA
+from . import AlignSubs
 
 def main():
-    HGVStoFASTA.run()
+    AlignSubs.run()
 
 if __name__ == "__main__":
     main()
