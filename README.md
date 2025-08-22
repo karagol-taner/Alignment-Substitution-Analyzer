@@ -21,7 +21,7 @@ AlignSubs
 - Option 2 (for all platforms): You can run the script directly from Google Colab: [AlignSubs.ipynb on Google Colab](https://colab.research.google.com/github/karagol-taner/Alignment-Substitution-Analyzer/blob/main/AlignSubs_Alignment_Substitution_Analyzer.ipynb)
   
 
-- Option 3 (for all platforms): This tool is also available on web: [www.tanerkaragol.com/](https://www.tanerkaragol.com/)
+- Option 3 (for all platforms): This tool is also available on web: [www.tanerkaragol.com/alignment-substitution-analyzer](https://www.tanerkaragol.com/alignment-substitution-analyzer)
 
 Latest version on PyPI:
 
