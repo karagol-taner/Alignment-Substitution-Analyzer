@@ -36,7 +36,7 @@ Latest version on PyPI:
  - **Substitution Summary:** Aggregates substitution counts across all pairs, sorted by total occurrences.
 
 3. **Property changes**
- - Protein: Hydropathy changes can optionally be calculated and included in CSV outputs.
+ - Protein: Hydropathy changes and pI changes can optionally be calculated and included in CSV outputs.
  - Additional protein/nucleotide property analyses will be included in upcoming versions.
    
 4. **Input Files:** Supports FASTA and Clustal alignment formats, also as text.
