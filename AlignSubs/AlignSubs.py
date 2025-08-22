@@ -35,6 +35,14 @@ KD_SCALE = {
     "S": -0.8, "T": -0.7, "W": -0.9, "Y": -1.3, "V": 4.2
 }
 
+# Isoelectric points (pI) from provided table
+PI_VALUES = {
+    "A": 6.00, "R": 10.76, "N": 5.41, "D": 2.77, "C": 5.07,
+    "Q": 5.65, "E": 3.22, "G": 5.97, "H": 7.95, "I": 6.02,
+    "L": 5.98, "K": 9.74, "M": 5.74, "F": 5.48, "P": 6.30,
+    "S": 5.68, "T": 5.60, "W": 5.89, "Y": 5.66, "V": 5.96
+}
+
 DNA_CHARS = set("ACGTU-")
 PROTEIN_CHARS = set("ACDEFGHIKLMNPQRSTVWY-")
 
@@ -86,12 +94,18 @@ def validate_seq_type(seq_type, seqs):
 
 def calculate_hydro_change(a1, a2):
     if a1 in KD_SCALE and a2 in KD_SCALE:
-        return abs(KD_SCALE[a1] - KD_SCALE[a2])
+        return KD_SCALE[a2] - KD_SCALE[a1]
+    return 0
+
+def calculate_pi_change(a1, a2):
+    if a1 in PI_VALUES and a2 in PI_VALUES:
+        return PI_VALUES[a2] - PI_VALUES[a1]
     return 0
 
 def compare_alignment(names, seqs, seq_type):
     all_changes = dict()
     hydro_changes = dict()
+    pi_changes = dict()
     n = len(names)
     for i in range(n):
         for j in range(n):
@@ -100,24 +114,30 @@ def compare_alignment(names, seqs, seq_type):
             key = (names[i], names[j])
             changes = defaultdict(list)
             hydro = dict()
+            pi = dict()
             for idx, (c1, c2) in enumerate(zip(seqs[i], seqs[j]), 1):
                 if c1 != c2 and c1 != "-" and c2 != "-":
                     change = f"{c1}>{c2}"
                     changes[change].append(idx)
                     if seq_type == "protein":
                         hydro[change] = calculate_hydro_change(c1, c2)
+                        pi[change] = calculate_pi_change(c1, c2)
             all_changes[key] = changes
             if seq_type == "protein":
                 hydro_changes[key] = hydro
-    return all_changes, hydro_changes
+                pi_changes[key] = pi
+    return all_changes, hydro_changes, pi_changes
 
-def save_directional_csv(names, all_changes, hydro_changes=None):
+def save_directional_csv(names, all_changes, hydro_changes=None, pi_changes=None):
     out_file = input("Enter path to save directional list CSV file: ").strip()
     if not out_file.lower().endswith(".csv"):
         out_file += ".csv"
     header = ["From", "To", "Change", "Positions", "Count"]
     if hydro_changes:
         header.append("HydropathyChange")
+    if pi_changes:
+        header.append("pIChange")
+
     with open(out_file, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(header)
@@ -130,12 +150,16 @@ def save_directional_csv(names, all_changes, hydro_changes=None):
                 for change, positions in sorted_changes:
                     row = [p1, p2, change, ",".join(map(str, positions)), len(positions)]
                     if hydro_changes:
-                        row.append(round(hydro_changes.get((p1, p2), {}).get(change, 0), 2))
+                        val = hydro_changes.get((p1, p2), {}).get(change, 0)
+                        row.append(round(val, 2))
+                    if pi_changes:
+                        val = pi_changes.get((p1, p2), {}).get(change, 0)
+                        row.append(round(val, 2))
                     writer.writerow(row)
     print(f"Directional CSV saved to {out_file}")
     time.sleep(0.5)
 
-def save_substitution_summary_csv(names, all_changes, hydro_changes=None):
+def save_substitution_summary_csv(names, all_changes, hydro_changes=None, pi_changes=None):
     out_file = input("Enter path to save substitution count summary CSV file: ").strip()
     if not out_file.lower().endswith(".csv"):
         out_file += ".csv"
@@ -153,6 +177,8 @@ def save_substitution_summary_csv(names, all_changes, hydro_changes=None):
     header = ["Change"]
     if hydro_changes:
         header.append("HydropathyChange")
+    if pi_changes:
+        header.append("pIChange")
     header += [f"{p1}->{p2}" for p1 in names for p2 in names if p1 != p2] + ["Total"]
 
     rows = []
@@ -163,6 +189,15 @@ def save_substitution_summary_csv(names, all_changes, hydro_changes=None):
             for (p1, p2), hydros in hydro_changes.items():
                 if change in hydros:
                     row.append(round(hydros[change], 2))
+                    found = True
+                    break
+            if not found:
+                row.append(0)
+        if pi_changes:
+            found = False
+            for (p1, p2), pis in pi_changes.items():
+                if change in pis:
+                    row.append(round(pis[change], 2))
                     found = True
                     break
             if not found:
@@ -182,9 +217,8 @@ def save_substitution_summary_csv(names, all_changes, hydro_changes=None):
     print(f"Substitution summary CSV saved to {out_file}")
     time.sleep(0.5)
 
-# ----------------- Main Run Function -----------------
 def run():
-    print("Alignment Substitution Analyzer v0.2")
+    print("Alignment Substitution Analyzer v0.3")
     time.sleep(1)
 
     seq_type = get_sequence_type()
@@ -198,16 +232,28 @@ def run():
     print(f"Sequence type confirmed: {seq_type.upper()}")
     time.sleep(0.5)
 
-    all_changes, hydro_changes = compare_alignment(names, seqs, seq_type)
+    all_changes, hydro_changes, pi_changes = compare_alignment(names, seqs, seq_type)
 
     include_hydro = False
+    include_pi = False
     if seq_type == "protein":
         ans = input("Include hydropathy column in CSVs? (yes/no): ").strip().lower()
         if ans in ("yes", "y"):
             include_hydro = True
+        ans = input("Include pI column in CSVs? (yes/no): ").strip().lower()
+        if ans in ("yes", "y"):
+            include_pi = True
 
-    save_directional_csv(names, all_changes, hydro_changes if include_hydro else None)
-    save_substitution_summary_csv(names, all_changes, hydro_changes if include_hydro else None)
+    save_directional_csv(
+        names, all_changes,
+        hydro_changes if include_hydro else None,
+        pi_changes if include_pi else None
+    )
+    save_substitution_summary_csv(
+        names, all_changes,
+        hydro_changes if include_hydro else None,
+        pi_changes if include_pi else None
+    )
 
     print("All tasks completed successfully!")
 

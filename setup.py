@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='AlignSubs',
-    version='0.2.4',
+    version='0.3.2',
     license='GPL-3.0',
     description='AlignSubs: Alignment Substitution Analyzer (for nucleotide and aminoacid substitutions)',
     author="Taner Karagol",
